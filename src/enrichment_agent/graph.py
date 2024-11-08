@@ -17,11 +17,11 @@ from enrichment_agent.configuration import Configuration
 from enrichment_agent.state import InputState, OutputState, State
 from enrichment_agent.tools import (
     TestCases,
+    agent_listingup_conditions,
+    agent_make_test_case_table,
     scrape_website,
     search,
     search_about_nyanta,
-    agent_listingup_conditions,
-    agent_make_test_case_table,
 )
 from enrichment_agent.utils import init_model
 

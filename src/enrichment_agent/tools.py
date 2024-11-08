@@ -6,13 +6,14 @@ Users can edit and extend these tools as needed.
 """
 
 import json
-from typing import Any, Optional, cast
+from typing import Any, List, Literal, Optional, Union, cast
 
 import aiohttp
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import InjectedToolArg
 from langgraph.prebuilt import InjectedState
+from pydantic import BaseModel
 from typing_extensions import Annotated
 
 from enrichment_agent.configuration import Configuration
@@ -75,17 +76,6 @@ async def scrape_website(
 
 
 ####################################  original tools  ##########################################################
-from typing import Literal, List, Union
-from pydantic import BaseModel
-from langchain_core.messages import SystemMessage, HumanMessage
-
-
-async def search_about_nyanta() -> str:
-    """data about nyanta.
-
-    this function return a result about nyanta
-    """
-    return "nyanta sleep at 10pm"
 
 
 ####################################  Define Schema  ##########################################################
@@ -93,7 +83,7 @@ async def search_about_nyanta() -> str:
 
 # 各行のデータを表現するスキーマ
 class Condition(BaseModel):
-    """Condition being evaluated sepalatery"""
+    """Define Condition being evaluated sepalatery."""
 
     condition: str
     value: Union[bool, Literal["-", "N/A"]]
@@ -101,7 +91,7 @@ class Condition(BaseModel):
 
 # 各行のデータを表現するスキーマ
 class TestCase(BaseModel):
-    """Test Case"""
+    """Test Case."""
 
     case_no: int
     conditions: List[Condition]
@@ -138,12 +128,11 @@ def agent_make_test_case_table(
     state: Annotated[State, InjectedState],
     config: Annotated[RunnableConfig, InjectedToolArg],
 ) -> TestCases:
-    """Make test case table from a given code
+    """Make test case table from a given code.
 
     Returns:
         TestCases: A Table of the test cases.
     """
-
     p = _TEST_CASE_TABLE_PROMPT.format(
         code=code,
         conditions=conditions,
@@ -204,12 +193,11 @@ def agent_listingup_conditions(
     state: Annotated[State, InjectedState],
     config: Annotated[RunnableConfig, InjectedToolArg],
 ) -> str:
-    """Listing up conditions from given code. This is useful for the first step to make test case table
+    """List up conditions from given code. This is useful for the first step to make test case table.
 
     Returns:
         str: List of conditioins and descriptioin about this condition
     """
-
     p = _CONDITiONS_LISTUP_PROMPT.format(code=code)
 
     raw_model = init_model(config)
