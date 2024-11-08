@@ -15,7 +15,14 @@ from pydantic import BaseModel, Field
 from enrichment_agent import prompts
 from enrichment_agent.configuration import Configuration
 from enrichment_agent.state import InputState, OutputState, State
-from enrichment_agent.tools import TestCases, scrape_website, search, search_about_nyanta, agent_listingup_conditions, agent_make_test_case_table
+from enrichment_agent.tools import (
+    TestCases,
+    scrape_website,
+    search,
+    search_about_nyanta,
+    agent_listingup_conditions,
+    agent_make_test_case_table,
+)
 from enrichment_agent.utils import init_model
 
 
@@ -51,7 +58,18 @@ async def call_agent_model(
 
     # Initialize the raw model with the provided configuration and bind the tools
     raw_model = init_model(config)
-    model = raw_model.bind_tools([scrape_website, search, search_about_nyanta, agent_make_test_case_table, agent_listingup_conditions, info_tool, TestCases], tool_choice="any")
+    model = raw_model.bind_tools(
+        [
+            scrape_website,
+            search,
+            search_about_nyanta,
+            agent_make_test_case_table,
+            agent_listingup_conditions,
+            info_tool,
+            TestCases,
+        ],
+        tool_choice="any",
+    )
     response = cast(AIMessage, await model.ainvoke(messages))
 
     # Initialize info to None
@@ -219,7 +237,18 @@ workflow = StateGraph(
 )
 workflow.add_node(call_agent_model)
 workflow.add_node(reflect)
-workflow.add_node("tools", ToolNode([search, scrape_website, search_about_nyanta, agent_make_test_case_table, agent_listingup_conditions]))
+workflow.add_node(
+    "tools",
+    ToolNode(
+        [
+            search,
+            scrape_website,
+            search_about_nyanta,
+            agent_make_test_case_table,
+            agent_listingup_conditions,
+        ]
+    ),
+)
 workflow.add_edge("__start__", "call_agent_model")
 workflow.add_conditional_edges("call_agent_model", route_after_agent)
 workflow.add_edge("tools", "call_agent_model")

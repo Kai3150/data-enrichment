@@ -73,10 +73,12 @@ async def scrape_website(
     result = await raw_model.ainvoke(p)
     return str(result.content)
 
+
 ####################################  original tools  ##########################################################
 from typing import Literal, List, Union
 from pydantic import BaseModel
 from langchain_core.messages import SystemMessage, HumanMessage
+
 
 async def search_about_nyanta() -> str:
     """data about nyanta.
@@ -85,7 +87,9 @@ async def search_about_nyanta() -> str:
     """
     return "nyanta sleep at 10pm"
 
+
 ####################################  Define Schema  ##########################################################
+
 
 # 各行のデータを表現するスキーマ
 class Condition(BaseModel):
@@ -93,6 +97,7 @@ class Condition(BaseModel):
 
     condition: str
     value: Union[bool, Literal["-", "N/A"]]
+
 
 # 各行のデータを表現するスキーマ
 class TestCase(BaseModel):
@@ -102,11 +107,13 @@ class TestCase(BaseModel):
     conditions: List[Condition]
     output: str
 
+
 # 複数行を包括するスキーマ
 class TestCases(BaseModel):
     """Test Case table to tell user."""
 
     test_cases: List[TestCase]  # 複数のTestCaseを包括
+
 
 ####################################  Define agent tools  ##########################################################
 
@@ -121,6 +128,7 @@ You create test cases for branch coverage based on the provided, pre-listed cond
 Based on the given code and listed up conditions, make a test case table.
 """
 
+
 # this is the agent function that will be called as tool
 # notice that you can pass the state to the tool via InjectedState annotation
 def agent_make_test_case_table(
@@ -128,7 +136,8 @@ def agent_make_test_case_table(
     conditions: str,
     *,
     state: Annotated[State, InjectedState],
-    config: Annotated[RunnableConfig, InjectedToolArg],) -> TestCases:
+    config: Annotated[RunnableConfig, InjectedToolArg],
+) -> TestCases:
     """Make test case table from a given code
 
     Returns:
@@ -188,17 +197,18 @@ Listing up conditions of following code:
 </code>
 """
 
+
 def agent_listingup_conditions(
     code: str,
     *,
     state: Annotated[State, InjectedState],
-    config: Annotated[RunnableConfig, InjectedToolArg],) -> str:
+    config: Annotated[RunnableConfig, InjectedToolArg],
+) -> str:
     """Listing up conditions from given code. This is useful for the first step to make test case table
 
     Returns:
         str: List of conditioins and descriptioin about this condition
     """
-
 
     p = _CONDITiONS_LISTUP_PROMPT.format(code=code)
 
