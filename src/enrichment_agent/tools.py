@@ -147,7 +147,6 @@ def agent_make_test_case_table(
     # return the LLM response as a string (expected tool response format)
     # this will be automatically turned to ToolMessage
     # by the prebuilt create_react_agent (supervisor)
-    print(test_cases)
     return test_cases
 
 
