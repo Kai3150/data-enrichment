@@ -20,8 +20,7 @@ from enrichment_agent.tools import (
     agent_listingup_conditions,
     agent_make_test_case_table,
     scrape_website,
-    search,
-    search_about_nyanta,
+    search
 )
 from enrichment_agent.utils import init_model
 

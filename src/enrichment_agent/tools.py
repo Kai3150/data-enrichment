@@ -66,7 +66,7 @@ async def scrape_website(
             content = await response.text()
 
     p = _INFO_PROMPT.format(
-        info=json.dumps(state.code, indent=2),
+        info=json.dumps("state", indent=2),
         url=url,
         content=content[:40_000],
     )
@@ -192,7 +192,7 @@ def agent_listingup_conditions(
     *,
     state: Annotated[State, InjectedState],
     config: Annotated[RunnableConfig, InjectedToolArg],
-) -> str:
+) -> str | list[str | dict[Any, Any]]:
     """List up conditions from given code. This is useful for the first step to make test case table.
 
     Returns:
