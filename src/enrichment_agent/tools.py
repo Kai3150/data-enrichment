@@ -141,7 +141,7 @@ def agent_make_test_case_table(
     # and add any additional logic (different models, custom prompts, structured output, etc.)
     raw_model = init_model(config)
     structured_model = raw_model.with_structured_output(TestCases)
-    response = structured_model.invoke(p)
+    response = structured_model.invoke(p).parse_obj(TestCases)
     # return the LLM response as a string (expected tool response format)
     # this will be automatically turned to ToolMessage
     # by the prebuilt create_react_agent (supervisor)
