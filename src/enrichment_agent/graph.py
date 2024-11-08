@@ -20,7 +20,7 @@ from enrichment_agent.tools import (
     agent_listingup_conditions,
     agent_make_test_case_table,
     scrape_website,
-    search
+    search,
 )
 from enrichment_agent.utils import init_model
 
@@ -61,7 +61,6 @@ async def call_agent_model(
         [
             scrape_website,
             search,
-            search_about_nyanta,
             agent_make_test_case_table,
             agent_listingup_conditions,
             info_tool,
@@ -242,7 +241,6 @@ workflow.add_node(
         [
             search,
             scrape_website,
-            search_about_nyanta,
             agent_make_test_case_table,
             agent_listingup_conditions,
         ]
